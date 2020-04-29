@@ -1,0 +1,3 @@
+Ash;Pikachu;40;90;70;Charizard;76;60;90;Snorlax;200;10;10
+Giovanni;Nidoqueen;100;40;90;Nidoking;160;62;76;Rhydon;180;77;42
+Laura;Nidoqueen;100;40;90;Nidoking;160;62;76;Rhydon;180;77;42

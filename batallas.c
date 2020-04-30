@@ -29,9 +29,9 @@ void torneo_destruir(torneo_t* torneo){
 
     for (int i = 0; i < torneo->cantidad_entrenadores; i++){
         free(torneo->entrenadores[i].pokemones);
-        //free(&torneo->entrenadores[i]);
-    //free(torneo->entrenadores);
     }
+    free(torneo->entrenadores);
+
     free(torneo);
 }
 
@@ -43,19 +43,24 @@ torneo_t* torneo_crear(char *ruta_archivo){
     if (entrenadores_f == NULL) {
         return NULL;
     }
+
     torneo_t* torneo = NULL;
     torneo = malloc(1 * sizeof(torneo_t));
-
+    torneo->cantidad_entrenadores = 0;
+    
     if (torneo == NULL) {
         return NULL;
     }
+
     agregar_entrenador(torneo, entrenadores_f);
     fclose(entrenadores_f);
+
     return torneo;
 }
 
 void pedir_memoria(torneo_t* torneo){
-    void* auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores+1)*sizeof(entrenador_t));
+    entrenador_t* auxiliar = NULL;
+    auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores+1)*sizeof(entrenador_t));
 
     if (auxiliar == NULL ){
         return;
@@ -71,56 +76,56 @@ void pedir_memoria(torneo_t* torneo){
     }
 }
 
+int parsear_archivo(FILE* entrenadores_f, torneo_t* torneo){
+    int leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", torneo->entrenadores[torneo->cantidad_entrenadores].nombre, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].inteligencia);
+
+    return leidos;
+}
+
 void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f){
 
     pedir_memoria(torneo);
 
-    int leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", torneo->entrenadores[torneo->cantidad_entrenadores].nombre, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].inteligencia);
+    int leidos = parsear_archivo(entrenadores_f, torneo);
+    
     torneo->cantidad_entrenadores++;
             
     while (leidos == 13 ){
-        //agregar_entrenador(torneo, entrenadores_f);
-       // agregar_entrenador(torneo, entrenadores_f);
-        // auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores+1)*sizeof(entrenador_t));
-
-        // if (auxiliar == NULL ){
-        //     return;
-        // }
-
-        // torneo->entrenadores = auxiliar;
-        // torneo->entrenadores[torneo->cantidad_entrenadores].pokemones = NULL;
-        // torneo->entrenadores[torneo->cantidad_entrenadores].pokemones = malloc(3 * sizeof(pokemon_t));
-            
-        // if (torneo->entrenadores[torneo->cantidad_entrenadores].pokemones == NULL){
-        //     return;
-        // }
-
         pedir_memoria(torneo);
 
-        leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", torneo->entrenadores[torneo->cantidad_entrenadores].nombre, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].inteligencia);
+        leidos = parsear_archivo(entrenadores_f, torneo);
+
         torneo->cantidad_entrenadores++;
-
+        
     }
-        if (leidos != 13){
+    if (leidos != 13){
 
-            void* auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
+        void* auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
 
-            if (auxiliar == NULL){
-                return;
-            }
-            
-            free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
-            free(torneo->entrenadores);
-            torneo->entrenadores = auxiliar;
-            torneo->cantidad_entrenadores--;
+        if (auxiliar == NULL){
+            return;
         }
+            
+        free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
+        torneo->entrenadores = auxiliar;
+        torneo->cantidad_entrenadores--;
+    }
+}
+
+
+
+void torneo_listar(torneo_t* torneo, void (*formatear_entrenador)(entrenador_t*)){
+    mostrar_torneo(torneo);
+    //mostrar caracteristicas
+    //mostrar fuerza
+    //mostrar nombres
+    //mostrar agilidad
+    //mostrar inteligencia
 }
 
 int main(){
     char* ruta = "archivo.txt";
-
-   torneo_t* torneo = torneo_crear(ruta);
-    mostrar_torneo(torneo);
-  // torneo_destruir(torneo);
+    torneo_t* torneo = torneo_crear(ruta);
+    torneo_destruir(torneo);
     return 0;
 }

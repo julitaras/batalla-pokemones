@@ -24,21 +24,21 @@ void mostrar_torneo(torneo_t *torneo){
     }
 }
 
-int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,entrenador_t*)){
-    if(torneo->cantidad_entrenadores == 1){
-        return -1;
-    }
+// int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,entrenador_t*)){
+//     if(torneo->cantidad_entrenadores == 1){
+//         return -1;
+//     }
 
-    if(torneo->cantidad_entrenadores %2 != 0){
+//     if(torneo->cantidad_entrenadores %2 != 0){
 
-    }
-    //si es impar la cantidad de entrenadores el ultimo pasa a la siguiente ronda
-    if(ganador_batalla(torneo->entrenadores)){
-        //el que pierde se debe sacar del vector, debo liberar los pokemons y hacer realloc
-    }
-    torneo->ronda ++;
-    return 0;
-}
+//     }
+//     //si es impar la cantidad de entrenadores el ultimo pasa a la siguiente ronda
+//     if(ganador_batalla(torneo->entrenadores)){
+//         //el que pierde se debe sacar del vector, debo liberar los pokemons y hacer realloc
+//     }
+//     torneo->ronda ++;
+//     return 0;
+// }
 
 // int ganador_inteligencia(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
 //     if(entrenador1->pokemones[0].inteligencia > entrenador2->pokemones[0].inteligencia){
@@ -80,7 +80,7 @@ torneo_t* torneo_crear(char *ruta_archivo){
 
 void pedir_memoria(torneo_t* torneo){
     entrenador_t* auxiliar = NULL;
-    auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores+1)*sizeof(entrenador_t));
+    auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores+1)*sizeof(entrenador_t));
 
     if (auxiliar == NULL ){
         return;
@@ -120,7 +120,7 @@ void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f){
     }
     if (leidos != 13){
 
-        entrenador_t* auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
+        entrenador_t* auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
 
         if (auxiliar == NULL){
             return;

@@ -66,6 +66,7 @@ torneo_t* torneo_crear(char *ruta_archivo){
     torneo_t* torneo = NULL;
     torneo = malloc(1 * sizeof(torneo_t));
     torneo->cantidad_entrenadores = 0;
+    torneo->entrenadores = NULL;
     torneo->ronda = 0;
 
     if (torneo == NULL) {
@@ -86,6 +87,7 @@ void pedir_memoria(torneo_t* torneo){
         return;
     }
 
+    //auxiliar->pokemones = NULL;
     torneo->entrenadores = auxiliar;
 
     torneo->entrenadores[torneo->cantidad_entrenadores].pokemones = NULL;
@@ -120,15 +122,16 @@ void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f){
     }
     if (leidos != 13){
 
-        entrenador_t* auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
+        torneo->cantidad_entrenadores--;
+        free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
+        
+        entrenador_t* auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores)*sizeof(entrenador_t));
 
         if (auxiliar == NULL){
             return;
         }
-            
-        free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
+
         torneo->entrenadores = auxiliar;
-        torneo->cantidad_entrenadores--;
     }
 }
 

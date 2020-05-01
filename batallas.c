@@ -29,17 +29,28 @@ int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,e
         return -1;
     }
 
+    if(torneo->cantidad_entrenadores %2 != 0){
+
+    }
+    //si es impar la cantidad de entrenadores el ultimo pasa a la siguiente ronda
+    if(ganador_batalla(torneo->entrenadores)){
+        //el que pierde se debe sacar del vector, debo liberar los pokemons y hacer realloc
+    }
     torneo->ronda ++;
     return 0;
 }
 
-void torneo_destruir(torneo_t* torneo){
+// int ganador_inteligencia(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
+//     if(entrenador1->pokemones[0].inteligencia > entrenador2->pokemones[0].inteligencia){
+//         //gana entrenador1 entonces pasa a la siguiente ronda, achicar vector de entrenadores
+//     }
+// }
 
+void torneo_destruir(torneo_t* torneo){
     for (int i = 0; i < torneo->cantidad_entrenadores; i++){
         free(torneo->entrenadores[i].pokemones);
     }
     free(torneo->entrenadores);
-
     free(torneo);
 }
 
@@ -55,7 +66,8 @@ torneo_t* torneo_crear(char *ruta_archivo){
     torneo_t* torneo = NULL;
     torneo = malloc(1 * sizeof(torneo_t));
     torneo->cantidad_entrenadores = 0;
-    
+    torneo->ronda = 0;
+
     if (torneo == NULL) {
         return NULL;
     }
@@ -108,7 +120,7 @@ void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f){
     }
     if (leidos != 13){
 
-        void* auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
+        entrenador_t* auxiliar = realloc(torneo->entrenadores, (torneo->cantidad_entrenadores-1)*sizeof(entrenador_t));
 
         if (auxiliar == NULL){
             return;
@@ -119,8 +131,6 @@ void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f){
         torneo->cantidad_entrenadores--;
     }
 }
-
-
 
 void torneo_listar(torneo_t* torneo, void (*formatear_entrenador)(entrenador_t*)){
     mostrar_torneo(torneo);//modificar

@@ -196,27 +196,25 @@ void mostrar_inteligencia_pokemones_entrenador(entrenador_t* entrenador){
 void mostrar_torneo(entrenador_t* entrenador){
 
     printf("Entrenador: %s\n", entrenador->nombre);
-    printf("Pokemon 1 Nombre: %s\n", entrenador->pokemones[0].nombre);
-    printf("Pokemon 1 Fuerza: %i\n", entrenador->pokemones[0].fuerza);
-    printf("Pokemon 1 Agilidad: %i\n", entrenador->pokemones[0].agilidad);
-    printf("Pokemon 1 Inteligencia: %i\n\n", entrenador->pokemones[0].inteligencia);
-    printf("Pokemon 2 Nombre: %s\n", entrenador->pokemones[1].nombre);
-    printf("Pokemon 2 Fuerza: %i\n", entrenador->pokemones[1].fuerza);
-    printf("Pokemon 2 Agilidad: %i\n", entrenador->pokemones[1].agilidad);
-    printf("Pokemon 2 Inteligencia: %i\n\n", entrenador->pokemones[1].inteligencia);
-    printf("Pokemon 3 Nombre: %s\n", entrenador->pokemones[2].nombre);
-    printf("Pokemon 3 Fuerza: %i\n", entrenador->pokemones[2].fuerza);
-    printf("Pokemon 3 Agilidad: %i\n", entrenador->pokemones[2].agilidad);
-    printf("Pokemon 3 Inteligencia: %i\n\n", entrenador->pokemones[2].inteligencia);
+    printf("\tPokemon 1 Nombre: %s\n", entrenador->pokemones[0].nombre);
+    printf("\tPokemon 1 Fuerza: %i\n", entrenador->pokemones[0].fuerza);
+    printf("\tPokemon 1 Agilidad: %i\n", entrenador->pokemones[0].agilidad);
+    printf("\tPokemon 1 Inteligencia: %i\n\n", entrenador->pokemones[0].inteligencia);
+    printf("\tPokemon 2 Nombre: %s\n", entrenador->pokemones[1].nombre);
+    printf("\tPokemon 2 Fuerza: %i\n", entrenador->pokemones[1].fuerza);
+    printf("\tPokemon 2 Agilidad: %i\n", entrenador->pokemones[1].agilidad);
+    printf("\tPokemon 2 Inteligencia: %i\n\n", entrenador->pokemones[1].inteligencia);
+    printf("\tPokemon 3 Nombre: %s\n", entrenador->pokemones[2].nombre);
+    printf("\tPokemon 3 Fuerza: %i\n", entrenador->pokemones[2].fuerza);
+    printf("\tPokemon 3 Agilidad: %i\n", entrenador->pokemones[2].agilidad);
+    printf("\tPokemon 3 Inteligencia: %i\n\n", entrenador->pokemones[2].inteligencia);
 }
 
 int main(){
     char* ruta = "archivo.txt";
     torneo_t* torneo = torneo_crear(ruta);
-    printf("Cantidad entrenadores: %i\n\n", torneo->cantidad_entrenadores);
     torneo_listar(torneo, mostrar_torneo);
     torneo_jugar_ronda(torneo, ganador_inteligencia);
-    printf("Cantidad entrenadores: %i\n\n", torneo->cantidad_entrenadores);
     torneo_listar(torneo, mostrar_torneo);
     torneo_destruir(torneo);
     return 0;

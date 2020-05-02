@@ -3,42 +3,31 @@
 #include <string.h>
 #include "batallas.h"
 
-
-
-int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,entrenador_t*)){
-    if(ganador_batalla == NULL){
-        return -1;
-    }
-    if(torneo->cantidad_entrenadores == 1){
-        return -1;
-    }
-    if(torneo->cantidad_entrenadores %2 != 0){
-        for (int i = 0; i < torneo->cantidad_entrenadores - 1; i++){
-                //int exito = ganador_batalla(&torneo->entrenadores[i], &torneo->entrenadores[i] + 1);
-        }
-    }   
-    //si es impar la cantidad de entrenadores el ultimo pasa a la siguiente ronda
-    //el que pierde se debe sacar del vector, debo liberar los pokemons y hacer realloc
-    
-    return 0;
-}
-
 void achicar_vector(torneo_t* torneo, int posicion){
-    //Pribar y acomodar codigo
+    //Probar y acomodar codigo
     if(torneo->cantidad_entrenadores == 0){
         return;
     }
+    
+    int ultimo = torneo->cantidad_entrenadores-1;
+    
+    torneo->cantidad_entrenadores--;
+    
+    entrenador_t aux = torneo->entrenadores[posicion]; 
 
-            int ultimo = torneo->cantidad_entrenadores-1;
-            torneo->cantidad_entrenadores--;
-            torneo->entrenadores[posicion] = torneo->entrenadores[ultimo];
-            free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
-            entrenador_t* auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores)*sizeof(entrenador_t));
+    torneo->entrenadores[posicion] = torneo->entrenadores[ultimo];
 
-            if(auxiliar == NULL){
-                return;
-            }
-        torneo->entrenadores = auxiliar;
+    torneo->entrenadores[ultimo] = aux;
+    
+    free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
+    
+    entrenador_t* auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores)*sizeof(entrenador_t));
+    
+    if(auxiliar == NULL){
+        return;
+    }
+    
+    torneo->entrenadores = auxiliar;
 }
 
 int ganador_inteligencia(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
@@ -48,11 +37,42 @@ int ganador_inteligencia(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
     
     if(suma_inteligencias_entrenador1 >= suma_inteligencias_entrenador2){
         return 0;
-        //gana entrenador1 entonces pasa a la siguiente ronda, achicar vector de entrenadores
     }
     else{
         return 1;
     }
+}
+
+int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,entrenador_t*)){
+    if(ganador_batalla == NULL){
+        return -1;
+    }
+    if(torneo->cantidad_entrenadores == 1){
+        return -1;
+    }
+
+    if(torneo->cantidad_entrenadores %2 != 0){
+        for (int i = 0; i < torneo->cantidad_entrenadores - 1; i++){
+            int gandor = ganador_batalla(&torneo->entrenadores[i], &torneo->entrenadores[i] + 1);
+            if (gandor == 0){
+                achicar_vector(torneo, i+1);
+            }else{
+                achicar_vector(torneo, i);
+            }
+        }
+    }else{
+        for (int i = 0; i < torneo->cantidad_entrenadores; i++){
+            int gandor = ganador_batalla(&torneo->entrenadores[i], &torneo->entrenadores[i] + 1);
+            
+             if (gandor == 0){
+                achicar_vector(torneo, i+1);
+            }else{
+                achicar_vector(torneo, i);
+            }
+        }
+    }   
+
+    return 0;
 }
 
 void torneo_destruir(torneo_t* torneo){
@@ -193,8 +213,11 @@ void mostrar_torneo(entrenador_t* entrenador){
 int main(){
     char* ruta = "archivo.txt";
     torneo_t* torneo = torneo_crear(ruta);
-    torneo_listar(torneo, mostrar_agilidad_pokemones_entrenador);
+    printf("Cantidad entrenadores: %i\n\n", torneo->cantidad_entrenadores);
+    torneo_listar(torneo, mostrar_torneo);
     torneo_jugar_ronda(torneo, ganador_inteligencia);
+    printf("Cantidad entrenadores: %i\n\n", torneo->cantidad_entrenadores);
+    torneo_listar(torneo, mostrar_torneo);
     torneo_destruir(torneo);
     return 0;
 }

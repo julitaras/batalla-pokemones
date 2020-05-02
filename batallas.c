@@ -87,10 +87,17 @@ void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f);
 
 torneo_t* torneo_crear(char *ruta_archivo){
 
-    //fijarse si el archivo esta vacio
     FILE *entrenadores_f = fopen(ruta_archivo, "r");
         
     if (entrenadores_f == NULL) {
+        return NULL;
+    }
+
+    char nombre[80];
+    int leidos = fscanf(entrenadores_f, "%[^;];", nombre);
+
+    if(leidos == -1){
+        fclose(entrenadores_f);
         return NULL;
     }
 
@@ -212,11 +219,22 @@ void mostrar_torneo(entrenador_t* entrenador){
 
 int main(){
     char* ruta = "archivo.txt";
+    int ronda = 0;
     torneo_t* torneo = torneo_crear(ruta);
-    torneo_listar(torneo, mostrar_torneo);
-    torneo_jugar_ronda(torneo, ganador_inteligencia);
-    torneo_listar(torneo, mostrar_torneo);
-    torneo_destruir(torneo);
+
+    if (torneo != NULL){
+        torneo_listar(torneo, mostrar_torneo);
+        ronda = torneo_jugar_ronda(torneo, ganador_inteligencia);
+        printf("Se jugo con exito o no ?: %i\n", ronda);
+        ronda = torneo_jugar_ronda(torneo, ganador_inteligencia);
+        printf("Se jugo con exito o no ?: %i\n", ronda);
+        ronda = torneo_jugar_ronda(torneo, ganador_inteligencia);
+        printf("Se jugo con exito o no ?: %i\n", ronda);
+        torneo_listar(torneo, mostrar_torneo);
+        ronda = torneo_jugar_ronda(torneo, ganador_inteligencia);
+        printf("Se jugo con exito o no ?: %i\n", ronda);
+        torneo_destruir(torneo);
+    }
     return 0;
 }
 

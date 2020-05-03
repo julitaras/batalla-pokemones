@@ -1,3 +1,4 @@
 Ash;Pikachu;40;90;70;Charizard;76;60;90;Snorlax;200;10;10
 Giovanni;Nidoqueen;100;40;90;Nidoking;160;62;76;Rhydon;180;77;42
-Laura;Nidoqueen;100;40;90;Nidoking;160;62;76;Rhydon;180;77;42
+Gary;Blastoise;100;55;70;Umbreon;60;20;50;Arcanine;200;10;70
+Bonnie;Braixen;80;30;22;Slowpoke;100;33;44;Magikarp:66:10:70

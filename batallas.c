@@ -275,22 +275,3 @@ void mostrar_torneo(entrenador_t* entrenador){
     printf("\t\t Agilidad: %i\n", entrenador->pokemones[2].agilidad);
     printf("\t\t Inteligencia: %i\n\n", entrenador->pokemones[2].inteligencia);
 }
-
-int main(){
-    char* ruta = "archivo.txt";
-    torneo_t* torneo = torneo_crear(ruta);
-
-    if (torneo != NULL){
-        torneo_listar(torneo, mostrar_torneo);
-        int exito = torneo_jugar_ronda(torneo, ganador_inteligencia);
-        printf("Numero de ronda: %i\n", exito);
-        exito = torneo_jugar_ronda(torneo, ganador_fuerza);
-        printf("Numero de ronda: %i\n", exito);
-        exito = torneo_jugar_ronda(torneo, ganador_agilidad);
-        printf("Numero de ronda: %i\n", exito);
-        printf("Ganador:\n");
-        torneo_listar(torneo, mostrar_nombre_entrenador);
-        torneo_destruir(torneo);
-    }
-    return 0;
-}

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "batallas.c"
-#include "batallas.h"
 
 int main(){
     char* ruta = "archivo.txt";

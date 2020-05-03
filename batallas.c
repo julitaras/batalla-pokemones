@@ -31,7 +31,7 @@ void achicar_vector(torneo_t* torneo, int posicion){
     torneo->entrenadores = auxiliar;
 }
 
-int ganador_inteligencia(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
+int ganador_inteligencia(entrenador_t* entrenador1, entrenador_t* entrenador2){
 
     int suma_inteligencias_entrenador1 = entrenador1->pokemones[0].inteligencia + entrenador1->pokemones[1].inteligencia + entrenador1->pokemones[2].inteligencia;
     int suma_inteligencias_entrenador2 = entrenador2->pokemones[0].inteligencia + entrenador2->pokemones[1].inteligencia + entrenador2->pokemones[2].inteligencia;
@@ -44,12 +44,26 @@ int ganador_inteligencia(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
     }
 }
 
-int ganador_fuerza(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
+int numero_mayor(int n1, int n2, int n3){
+    if ( n1 >= n2 && n1 >= n3 ){
+        return n1;
+    }
+    else{
+        if ( n2 > n3 ){
+            return n2;
+        }
+        else{
+            return n3;
+        }
+    }
+}
 
-    int suma_fuerzas_entrenador1 = entrenador1->pokemones[0].fuerza + entrenador1->pokemones[1].fuerza + entrenador1->pokemones[2].fuerza;
-    int suma_fuerzas_entrenador2 = entrenador2->pokemones[0].fuerza + entrenador2->pokemones[1].fuerza + entrenador2->pokemones[2].fuerza;
+int ganador_fuerza(entrenador_t* entrenador1, entrenador_t* entrenador2){
+
+    int fuerza_entrenador1 = numero_mayor(entrenador1->pokemones[0].fuerza, entrenador1->pokemones[1].fuerza, entrenador1->pokemones[2].fuerza);
+    int fuerza_entrenador2 = numero_mayor(entrenador2->pokemones[0].fuerza, entrenador2->pokemones[1].fuerza, entrenador2->pokemones[2].fuerza);
     
-    if(suma_fuerzas_entrenador1 >= suma_fuerzas_entrenador2){
+    if(fuerza_entrenador1 >= fuerza_entrenador2){
         return 0;
     }
     else{
@@ -57,7 +71,7 @@ int ganador_fuerza(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
     }
 }
 
-int ganador_agilidad(entrenador_t* entrenador1 ,entrenador_t* entrenador2){
+int ganador_agilidad(entrenador_t* entrenador1, entrenador_t* entrenador2){
 
     int suma_agilidades_entrenador1 = entrenador1->pokemones[0].agilidad + entrenador1->pokemones[1].agilidad + entrenador1->pokemones[2].agilidad;
     int suma_agilidades_entrenador2 = entrenador2->pokemones[0].agilidad + entrenador2->pokemones[1].agilidad + entrenador2->pokemones[2].agilidad;
@@ -86,7 +100,8 @@ int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,e
 
             if (ganador == 0){
                 achicar_vector(torneo, i+1);
-            }else{
+            }
+            else{
                 achicar_vector(torneo, i);
             }
         }
@@ -97,7 +112,8 @@ int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,e
             
              if (ganador == 0){
                 achicar_vector(torneo, i+1);
-            }else{
+            }
+            else{
                 achicar_vector(torneo, i);
             }
         }
@@ -117,7 +133,7 @@ void torneo_destruir(torneo_t* torneo){
 void pedir_memoria(torneo_t* torneo){
 
     entrenador_t* auxiliar = NULL;
-    auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores+1)*sizeof(entrenador_t));
+    auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores+1) * sizeof(entrenador_t));
 
     if (auxiliar == NULL ){
         return;
@@ -148,7 +164,7 @@ bool hay_entrenador(FILE* entrenadores_f){
 }
 
 int parsear_archivo(FILE* entrenadores_f, entrenador_t* entrenador){
-    int leidos = fscanf(entrenadores_f,"%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", entrenador->nombre, entrenador->pokemones[0].nombre, &entrenador->pokemones[0].fuerza, &entrenador->pokemones[0].agilidad, &entrenador->pokemones[0].inteligencia, entrenador->pokemones[1].nombre, &entrenador->pokemones[1].fuerza, &entrenador->pokemones[1].agilidad, &entrenador->pokemones[1].inteligencia, entrenador->pokemones[2].nombre, &entrenador->pokemones[2].fuerza, &entrenador->pokemones[2].agilidad, &entrenador->pokemones[2].inteligencia);
+    int leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", entrenador->nombre, entrenador->pokemones[0].nombre, &entrenador->pokemones[0].fuerza, &entrenador->pokemones[0].agilidad, &entrenador->pokemones[0].inteligencia, entrenador->pokemones[1].nombre, &entrenador->pokemones[1].fuerza, &entrenador->pokemones[1].agilidad, &entrenador->pokemones[1].inteligencia, entrenador->pokemones[2].nombre, &entrenador->pokemones[2].fuerza, &entrenador->pokemones[2].agilidad, &entrenador->pokemones[2].inteligencia);
 
     return leidos;
 }
@@ -203,13 +219,14 @@ torneo_t* torneo_crear(char *ruta_archivo){
 
     torneo_t* torneo = NULL;
     torneo = malloc(1 * sizeof(torneo_t));
-    torneo->cantidad_entrenadores = 0;
-    torneo->entrenadores = NULL;
-    torneo->ronda = 0;
 
     if (torneo == NULL) {
         return NULL;
     }
+    
+    torneo->cantidad_entrenadores = 0;
+    torneo->entrenadores = NULL;
+    torneo->ronda = 0;
 
     agregar_entrenadores(entrenadores_f, torneo);
 
@@ -236,25 +253,25 @@ void mostrar_nombre_entrenador(entrenador_t* entrenador){
 void mostrar_nombres_pokemones_entrenador(entrenador_t* entrenador){
     printf("Nombre entrenador: %s, nombre del primer pokemon: %s\n", entrenador->nombre, entrenador->pokemones[0].nombre);
     printf("Nombre entrenador: %s, nombre del segundo pokemon: %s\n", entrenador->nombre, entrenador->pokemones[1].nombre);
-    printf("Nombre entrenador: %s, nombre del tercer pokemon: %s\n", entrenador->nombre,entrenador->pokemones[2].nombre);
+    printf("Nombre entrenador: %s, nombre del tercer pokemon: %s\n", entrenador->nombre, entrenador->pokemones[2].nombre);
 }
 
 void mostrar_fuerza_pokemones_entrenador(entrenador_t* entrenador){
-    printf("Nombre entrenador: %s, fuerza del primer pokemon: %i\n", entrenador->nombre,entrenador->pokemones[0].fuerza);
-    printf("Nombre entrenador: %s, fuerza del segundo pokemon: %i\n", entrenador->nombre,entrenador->pokemones[1].fuerza);
-    printf("Nombre entrenador: %s, fuerza del tercer pokemon: %i\n", entrenador->nombre,entrenador->pokemones[2].fuerza);
+    printf("Nombre entrenador: %s, fuerza de %s: %i\n", entrenador->nombre, entrenador->pokemones[0].nombre, entrenador->pokemones[0].fuerza);
+    printf("Nombre entrenador: %s, fuerza de %s: %i\n", entrenador->nombre, entrenador->pokemones[1].nombre, entrenador->pokemones[1].fuerza);
+    printf("Nombre entrenador: %s, fuerza de %s: %i\n", entrenador->nombre, entrenador->pokemones[2].nombre, entrenador->pokemones[2].fuerza);
 }
 
 void mostrar_agilidad_pokemones_entrenador(entrenador_t* entrenador){
-    printf("Nombre entrenador: %s, agilidad del primer pokemon: %i\n", entrenador->nombre,entrenador->pokemones[0].agilidad);
-    printf("Nombre entrenador: %s, agilidad del segundo pokemon: %i\n", entrenador->nombre,entrenador->pokemones[1].agilidad);
-    printf("Nombre entrenador: %s, agilidad del tercer pokemon: %i\n", entrenador->nombre,entrenador->pokemones[2].agilidad);
+    printf("Nombre entrenador: %s, agilidad de %s: %i\n", entrenador->nombre, entrenador->pokemones[0].nombre, entrenador->pokemones[0].agilidad);
+    printf("Nombre entrenador: %s, agilidad de %s: %i\n", entrenador->nombre, entrenador->pokemones[1].nombre, entrenador->pokemones[1].agilidad);
+    printf("Nombre entrenador: %s, agilidad de %s: %i\n", entrenador->nombre, entrenador->pokemones[2].nombre, entrenador->pokemones[2].agilidad);
 }
 
 void mostrar_inteligencia_pokemones_entrenador(entrenador_t* entrenador){
-    printf("Nombre entrenador: %s, inteligencia del primer pokemon: %i\n", entrenador->nombre,entrenador->pokemones[0].inteligencia);
-    printf("Nombre entrenador: %s, inteligencia del segundo pokemon: %i\n", entrenador->nombre,entrenador->pokemones[1].inteligencia);
-    printf("Nombre entrenador: %s, inteligencia del tercer pokemon: %i\n", entrenador->nombre,entrenador->pokemones[2].inteligencia);
+    printf("Nombre entrenador: %s, inteligencia de %s: %i\n", entrenador->nombre, entrenador->pokemones[0].nombre, entrenador->pokemones[0].inteligencia);
+    printf("Nombre entrenador: %s, inteligencia de %s: %i\n", entrenador->nombre, entrenador->pokemones[1].nombre, entrenador->pokemones[1].inteligencia);
+    printf("Nombre entrenador: %s, inteligencia de %s: %i\n", entrenador->nombre, entrenador->pokemones[2].nombre, entrenador->pokemones[2].inteligencia);
 }
 
 void mostrar_torneo(entrenador_t* entrenador){

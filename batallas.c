@@ -90,7 +90,8 @@ int torneo_jugar_ronda(torneo_t* torneo, int (*ganador_batalla)(entrenador_t* ,e
                 achicar_vector(torneo, i);
             }
         }
-    }else{
+    }
+    else{
         for (int i = 0; i < torneo->cantidad_entrenadores; i++){
             int ganador = ganador_batalla(&torneo->entrenadores[i], &torneo->entrenadores[i] + 1);
             
@@ -132,69 +133,60 @@ void pedir_memoria(torneo_t* torneo){
     }
 }
 
-int parsear_archivo(FILE* entrenadores_f, torneo_t* torneo){
-    int leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", torneo->entrenadores[torneo->cantidad_entrenadores].nombre, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].inteligencia, torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].nombre, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].fuerza, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].agilidad, &torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].inteligencia);
+bool hay_entrenador(FILE* entrenadores_f){
+    entrenador_t entrenador;
+    pokemon_t pokemones[3];
+    entrenador.pokemones = pokemones;
+
+    int leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", entrenador.nombre, entrenador.pokemones[0].nombre, &entrenador.pokemones[0].fuerza, &entrenador.pokemones[0].agilidad, &entrenador.pokemones[0].inteligencia, entrenador.pokemones[1].nombre, &entrenador.pokemones[1].fuerza, &entrenador.pokemones[1].agilidad, &entrenador.pokemones[1].inteligencia, entrenador.pokemones[2].nombre, &entrenador.pokemones[2].fuerza, &entrenador.pokemones[2].agilidad, &entrenador.pokemones[2].inteligencia);
+
+    if (leidos == 13){
+        return true;
+    }
+
+    return false;
+}
+
+int parsear_archivo(FILE* entrenadores_f, entrenador_t* entrenador){
+    int leidos = fscanf(entrenadores_f,"%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", entrenador->nombre, entrenador->pokemones[0].nombre, &entrenador->pokemones[0].fuerza, &entrenador->pokemones[0].agilidad, &entrenador->pokemones[0].inteligencia, entrenador->pokemones[1].nombre, &entrenador->pokemones[1].fuerza, &entrenador->pokemones[1].agilidad, &entrenador->pokemones[1].inteligencia, entrenador->pokemones[2].nombre, &entrenador->pokemones[2].fuerza, &entrenador->pokemones[2].agilidad, &entrenador->pokemones[2].inteligencia);
 
     return leidos;
 }
 
-void agregar_entrenador(torneo_t *torneo, FILE* entrenadores_f){
-
-    pedir_memoria(torneo);
-
-    rewind(entrenadores_f);
-    int leidos = parsear_archivo(entrenadores_f, torneo);
-    
+void mapear_datos(torneo_t* torneo, entrenador_t entrenador){
+    strcpy(torneo->entrenadores[torneo->cantidad_entrenadores].nombre, entrenador.nombre);
+    strcpy(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].nombre, entrenador.pokemones[0].nombre);
+    strcpy(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].nombre, entrenador.pokemones[1].nombre);
+    strcpy(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].nombre, entrenador.pokemones[2].nombre);
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].fuerza = entrenador.pokemones[0].fuerza;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].fuerza = entrenador.pokemones[1].fuerza;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].fuerza = entrenador.pokemones[2].fuerza;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].agilidad = entrenador.pokemones[0].agilidad;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].agilidad = entrenador.pokemones[1].agilidad;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].agilidad = entrenador.pokemones[2].agilidad;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[0].inteligencia = entrenador.pokemones[0].inteligencia;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[1].inteligencia = entrenador.pokemones[1].inteligencia;
+    torneo->entrenadores[torneo->cantidad_entrenadores].pokemones[2].inteligencia = entrenador.pokemones[2].inteligencia;
     torneo->cantidad_entrenadores++;
-            
-    while (leidos == 13 ){
-        pedir_memoria(torneo);
-
-        leidos = parsear_archivo(entrenadores_f, torneo);
-
-        torneo->cantidad_entrenadores++; 
-    }
-    if (leidos != 13){
-
-        torneo->cantidad_entrenadores--;
-        free(torneo->entrenadores[torneo->cantidad_entrenadores].pokemones);
-
-        entrenador_t* auxiliar = realloc(torneo->entrenadores, ((unsigned)torneo->cantidad_entrenadores)*sizeof(entrenador_t));
-
-        if (auxiliar == NULL){
-            return;
-        }
-
-        torneo->entrenadores = auxiliar;
-    }
 }
 
-// leer(entrenador_aux)
-// if(lei_bien){
-//   mas_memoria
-//   copiar(entrenadores[tope], entrenador_aux)
-// }
-// en vez de
-// leer(entrenadores[tope]
-// tope++;
-// if(lei_bien == false){
-// borra lo que leiste
-// achicá el vector
-// tope--;
-// }
+void agregar_entrenadores(FILE* entrenadores_f, torneo_t* torneo){
 
-// bool chequear_linea(FILE* entrenadores_f){
-//     entrenador_t* entrenador = NULL;
-//     pokemon_t pokemones[3];
-//     entrenador->pokemones = pokemones;
+    entrenador_t entrenador;
+    pokemon_t pokemones[3];
+    entrenador.pokemones = pokemones;
 
-//     int leidos = fscanf(entrenadores_f, "%[^;];%[^;];%i;%i;%i;%[^;];%i;%i;%i;%[^;];%i;%i;%i\n", entrenador->nombre, entrenador->pokemones[0].nombre, &entrenador->pokemones[0].fuerza, &entrenador->pokemones[0].agilidad, &entrenador->pokemones[0].inteligencia, entrenador->pokemones[1].nombre, &entrenador->pokemones[1].fuerza, &entrenador->pokemones[1].agilidad, &entrenador->pokemones[1].inteligencia, entrenador->pokemones[2].nombre, &entrenador->pokemones[2].fuerza, &entrenador->pokemones[2].agilidad, &entrenador->pokemones[2].inteligencia);
+    rewind(entrenadores_f);
+    int leidos = parsear_archivo(entrenadores_f, &entrenador);
 
-//     if(leidos == 13){
-//         return true;
-//     }
-//     return false;
-// }
+    while(leidos == 13){
+        pedir_memoria(torneo);
+
+        mapear_datos(torneo, entrenador);
+
+        leidos = parsear_archivo(entrenadores_f, &entrenador);
+    }
+}
 
 torneo_t* torneo_crear(char *ruta_archivo){
 
@@ -204,10 +196,7 @@ torneo_t* torneo_crear(char *ruta_archivo){
         return NULL;
     }
 
-    char nombre[80];
-    int leidos = fscanf(entrenadores_f, "%[^;];", nombre);
-
-    if(leidos == -1){
+    if(!hay_entrenador(entrenadores_f)){
         fclose(entrenadores_f);
         return NULL;
     }
@@ -222,7 +211,7 @@ torneo_t* torneo_crear(char *ruta_archivo){
         return NULL;
     }
 
-    agregar_entrenador(torneo, entrenadores_f);
+    agregar_entrenadores(entrenadores_f, torneo);
 
     fclose(entrenadores_f);
 
@@ -287,16 +276,19 @@ void mostrar_torneo(entrenador_t* entrenador){
     printf("\t\t Inteligencia: %i\n\n", entrenador->pokemones[2].inteligencia);
 }
 
-
-
-//hacer que en el main se usen todos los torneos
 int main(){
     char* ruta = "archivo.txt";
     torneo_t* torneo = torneo_crear(ruta);
 
     if (torneo != NULL){
         torneo_listar(torneo, mostrar_torneo);
-        torneo_jugar_ronda(torneo, ganador_inteligencia);
+        int exito = torneo_jugar_ronda(torneo, ganador_inteligencia);
+        printf("Numero de ronda: %i\n", exito);
+        exito = torneo_jugar_ronda(torneo, ganador_fuerza);
+        printf("Numero de ronda: %i\n", exito);
+        exito = torneo_jugar_ronda(torneo, ganador_agilidad);
+        printf("Numero de ronda: %i\n", exito);
+        printf("Ganador:\n");
         torneo_listar(torneo, mostrar_nombre_entrenador);
         torneo_destruir(torneo);
     }

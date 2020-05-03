@@ -3,11 +3,18 @@
 ## Introduccion
 El programa se encarga de crear, cargar, listar y realizar batallas de pokemones.
 
-Se generara un torneo en el cual se cargaran los participantes a traves de un ```archivo.txt```
+Se generara un torneo en el cual se cargaran los participantes a traves de un ```archivo.txt```.
 
-En el mismo se encontraran los nombres de los participantes junto con los nombres de sus respectivos pokemones y sus habilidades (fuerza, agilidad, inteligencia).
+El torneo sera creado en el ```heap```, al igual que los entrenadores junto con sus pokemones, sus datos se manejaran con memoria dinamica.
 
+En el archivo se encontraran los nombres de los participantes junto con los nombres de sus respectivos pokemones y sus habilidades (fuerza, agilidad, inteligencia).
 Todos los participantes poseen 3 pokemones.
+
+Estos datos seran leidos y mapeados a las estructuras que se encuentran en el heap.
+
+Se podrá listar a los entrenadores y sus pokemones.
+
+Los entrenadores jugaran batallas, utilizando las habilidades de sus pokemones.
 
 ---
 #### Acerca de listar
